@@ -2,6 +2,7 @@ package th.ac.ku.cardgame;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -29,11 +31,21 @@ public class HomeActivity extends AppCompatActivity {
     int currentState;
     Card npcCard;
     Card playerCard;
+    Gson gson = new Gson();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        //get User data from MainActivity
+        Intent intent = getIntent();
+        String userStr = intent.getStringExtra("user");
+        User user = gson.fromJson(userStr, User.class);
+        String responseString = "Id : " + user.getId()
+                + "\n" + "Key : " + user.getKey();
+        Log.i("vac", responseString);
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -73,7 +85,6 @@ public class HomeActivity extends AppCompatActivity {
         npc_card.setVisibility(View.VISIBLE);
         player_card.setVisibility(View.VISIBLE);
         playButton.setVisibility(View.INVISIBLE);
-
 
     }
 

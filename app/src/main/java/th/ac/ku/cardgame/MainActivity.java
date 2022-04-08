@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                     status = response.code();
                     Log.i("vac", "accept: " + responseString);
                     if (status == 200 || status == 201) {
+                        Gson gson = new Gson();
+                        String jsonInString = gson.toJson(responseFromAPI);
+                        intent.putExtra("user", jsonInString);
                         startActivity(intent);
                     }
                 }
