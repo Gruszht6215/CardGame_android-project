@@ -23,17 +23,38 @@ public class User {
     String id;
     @Expose
     String key;
+
     BigInteger userEth;
 
     public String getId() {
         return id;
     }
+
     public String getKey() {
         return key;
     }
 
+    public BigInteger getUserEth() {
+        return userEth;
+    }
+
     public void setUserEth(BigInteger userEth) {
         this.userEth = userEth;
+    }
+
+    public void initialPlayerEth() {
+        Web3j web3 = Web3j.build(new HttpService("https://goerli.infura.io/v3/f52c5ffe6f3249b3b5c553208d952fa1"));
+        Credentials credentials = Credentials.create("405d238d5eb72504ff3f6f52a3ea0df6a27a378eeb5a3985901d06dfe4f6877a");
+        ContractGasProvider contractGasProvider = new DefaultGasProvider();
+        CardGameSolidity cardGameSolidity = CardGameSolidity.load(getKey(), web3, credentials, contractGasProvider);
+
+        cardGameSolidity.retrieve().flowable().subscribeOn(Schedulers.io()).subscribe(new Consumer<BigInteger>() {
+            @Override
+            public void accept(BigInteger bigInteger) throws Exception {
+                Log.i("vac", "initailEth: " + bigInteger);
+                setUserEth(bigInteger);
+            }
+        });
     }
 
     public void retrievePlayerEth() {
@@ -46,11 +67,9 @@ public class User {
             @Override
             public void accept(BigInteger bigInteger) throws Exception {
                 Log.i("vac", "retrieve: " + bigInteger);
-                setUserEth(bigInteger);
+//                setUserEth(bigInteger);
             }
         });
-
-//        return String.valueOf(bi);
     }
 
     public void storePlayerEth(String value) {
@@ -82,6 +101,8 @@ public class User {
             @Override
             public void accept(TransactionReceipt transactionReceipt) throws Exception {
                 Log.i("vac", "increase: " + value);
+//                BigInteger strToBigInt = new BigInteger(value);
+//                setUserEth(getUserEth().add(strToBigInt));
             }
         }, new Consumer<Throwable>() {
             @Override
@@ -101,6 +122,8 @@ public class User {
             @Override
             public void accept(TransactionReceipt transactionReceipt) throws Exception {
                 Log.i("vac", "decrease: " + value);
+//                BigInteger strToBigInt = new BigInteger(value);
+//                setUserEth(getUserEth().subtract(strToBigInt));
             }
         }, new Consumer<Throwable>() {
             @Override

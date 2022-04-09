@@ -27,4 +27,14 @@ public class Card {
     public String getSuit() {
         return suit;
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "code='" + code + '\'' +
+                ", image='" + image + '\'' +
+                ", value='" + value + '\'' +
+                ", suit='" + suit + '\'' +
+                '}';
+    }
 }

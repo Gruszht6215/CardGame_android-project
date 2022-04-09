@@ -13,7 +13,7 @@ public interface RetrofitAPI {
     @POST("/api/login-by-key/{key}")
     Call<User> login(@Path("key") String key);
 
-    @GET("/api/deck/new/draw/?count=1")
+    @GET("/api/deck/new/draw/?count=2")
     Call<Deck> getCard();
 
 //    @GET("/api/deck/new/draw/?count=1")
