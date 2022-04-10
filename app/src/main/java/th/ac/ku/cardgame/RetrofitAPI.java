@@ -1,13 +1,11 @@
 package th.ac.ku.cardgame;
 
-import java.util.List;
-
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import th.ac.ku.cardgame.DeckOfCard.Deck;
+import th.ac.ku.cardgame.UserModel.User;
 
 public interface RetrofitAPI {
     @POST("/api/login-by-key/{key}")

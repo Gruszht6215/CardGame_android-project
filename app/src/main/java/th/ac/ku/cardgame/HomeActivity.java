@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
-import android.icu.number.IntegerWidth;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,12 +19,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
-import org.w3c.dom.Text;
-import org.web3j.ens.EnsResolutionException;
-
 import java.math.BigInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import th.ac.ku.cardgame.DeckOfCard.Card;
 import th.ac.ku.cardgame.DeckOfCard.Deck;
+import th.ac.ku.cardgame.UserModel.User;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -68,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
 
         //set userEthTextView
         TextView userEthAmount = findViewById(R.id.userEthTextView);
-        userEthAmount.setText("ETH: " + String.valueOf(user.userEth));
+        userEthAmount.setText("ETH: " + String.valueOf(user.getUserEth()));
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -111,7 +106,7 @@ public class HomeActivity extends AppCompatActivity {
             if (!betPrice.getText().toString().trim().matches("[0-9]+")) {
                 Toast.makeText(HomeActivity.this, "Bet price contains Special Characters", Toast.LENGTH_SHORT).show();
             } else {
-                if (Integer.parseInt(betPrice.getText().toString().trim()) > Integer.parseInt(String.valueOf(user.userEth))) {
+                if (Integer.parseInt(betPrice.getText().toString().trim()) > Integer.parseInt(String.valueOf(user.getUserEth()))) {
                     Toast.makeText(HomeActivity.this, "Your bet price must be lower than your ETH amount", Toast.LENGTH_LONG).show();
                 } else {
                     ConstraintLayout betStat = findViewById(R.id.constraintLayoutBet);
@@ -246,7 +241,7 @@ public class HomeActivity extends AppCompatActivity {
             progressStat.setVisibility(View.VISIBLE);
             betStat.setVisibility(View.INVISIBLE);
             BigInteger strToBi = new BigInteger(value);
-            BigInteger totalEth = user.userEth.add(strToBi);
+            BigInteger totalEth = user.getUserEth().add(strToBi);
             user.setUserEth(totalEth);
             userEthAmount.setText("ETH: " + String.valueOf(totalEth));
 
@@ -257,7 +252,7 @@ public class HomeActivity extends AppCompatActivity {
             progressStat.setVisibility(View.VISIBLE);
             betStat.setVisibility(View.INVISIBLE);
             BigInteger strToBi = new BigInteger(value);
-            BigInteger totalEth = user.userEth.add(strToBi);
+            BigInteger totalEth = user.getUserEth().add(strToBi);
             user.setUserEth(totalEth);
             userEthAmount.setText("ETH: " + String.valueOf(totalEth));
 
@@ -268,7 +263,7 @@ public class HomeActivity extends AppCompatActivity {
             progressStat.setVisibility(View.VISIBLE);
             betStat.setVisibility(View.INVISIBLE);
             BigInteger strToBi = new BigInteger(value);
-            BigInteger totalEth = user.userEth.add(strToBi);
+            BigInteger totalEth = user.getUserEth().add(strToBi);
             user.setUserEth(totalEth);
             userEthAmount.setText("ETH: " + String.valueOf(totalEth));
 
@@ -279,7 +274,7 @@ public class HomeActivity extends AppCompatActivity {
             progressStat.setVisibility(View.VISIBLE);
             betStat.setVisibility(View.INVISIBLE);
             BigInteger strToBi = new BigInteger(value);
-            BigInteger totalEth = user.userEth.subtract(strToBi);
+            BigInteger totalEth = user.getUserEth().subtract(strToBi);
             user.setUserEth(totalEth);
             userEthAmount.setText("ETH: " + String.valueOf(totalEth));
         }

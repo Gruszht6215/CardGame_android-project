@@ -1,4 +1,4 @@
-package th.ac.ku.cardgame;
+package th.ac.ku.cardgame.UserModel;
 
 import static android.content.ContentValues.TAG;
 
@@ -17,6 +17,7 @@ import java.math.BigInteger;
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import th.ac.ku.cardgame.CardGameSolidity;
 
 public class User {
     @Expose

@@ -16,15 +16,13 @@ import com.google.gson.Gson;
 import org.web3j.ens.EnsResolutionException;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import th.ac.ku.cardgame.UserModel.User;
 
 public class MainActivity extends AppCompatActivity {
     int status = 0;
@@ -36,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void joinBtn(View view) throws InterruptedException {
+        Intent intent = new Intent(this, TransactionActivity.class);
+        startActivity(intent);
+
+
+        /*
         Intent intent = new Intent(this, HomeActivity.class);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -77,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i("vac", "json" + jsonInString);
                                 intent.putExtra("user", jsonInString);
                             }).thenRun(() -> startActivity(intent));
-//                            responseFromAPI.initialPlayerEth();
-//                            startActivity(intent);
+
                         } catch (EnsResolutionException e) {
                             Toast.makeText(MainActivity.this, "Invalid wallet address.", Toast.LENGTH_SHORT).show();
                         }
@@ -91,6 +93,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Try again", Toast.LENGTH_SHORT).show();
                 }
             });
-        }
+        }*/
     }
 }
