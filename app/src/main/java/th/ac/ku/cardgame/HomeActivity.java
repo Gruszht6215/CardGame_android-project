@@ -28,6 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import th.ac.ku.cardgame.DeckOfCard.Card;
 import th.ac.ku.cardgame.DeckOfCard.Deck;
+import th.ac.ku.cardgame.UserModel.Transaction;
 import th.ac.ku.cardgame.UserModel.User;
 
 
@@ -160,11 +161,11 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Deck> call, Response<Deck> response) {
                 Deck responseFromAPI = response.body();
+                //Card field in Deck is List type.
                 Card card = responseFromAPI.getCards().get(0);
                 Card card2 = responseFromAPI.getCards().get(1);
-                Log.i("vac", "accept: " + response.toString());
+//                Log.i("vac", "accept: " + response.toString());
                 Log.i("vac", "accept: " + responseFromAPI);
-
 
                 String responseString = "Response Code : " + response.code()
                         + "\nstatus : " + responseFromAPI.getSuccess()
@@ -177,6 +178,7 @@ public class HomeActivity extends AppCompatActivity {
                         + "\n" + "Cards2 Suit: " + card2.getSuit()
                         + "\n" + "Cards2 Value: " + card2.getValue();
                 Log.i("vac", "accept: " + responseString);
+
                 //Set The Card Img
                 ImageButton npcImageButton = findViewById(R.id.npc_card);
                 Glide.with(HomeActivity.this).load(card2.getImage()).into(npcImageButton);
@@ -244,7 +246,7 @@ public class HomeActivity extends AppCompatActivity {
             BigInteger totalEth = user.getUserEth().add(strToBi);
             user.setUserEth(totalEth);
             userEthAmount.setText("ETH: " + String.valueOf(totalEth));
-
+            createTransactionHistory("WITHDRAW", value);
         } else if (playerValue == npcValue && currentState == 2) {
             Log.i("vac", "Game Result : Win");
             result.setText("WIN!");
@@ -255,7 +257,7 @@ public class HomeActivity extends AppCompatActivity {
             BigInteger totalEth = user.getUserEth().add(strToBi);
             user.setUserEth(totalEth);
             userEthAmount.setText("ETH: " + String.valueOf(totalEth));
-
+            createTransactionHistory("WITHDRAW", value);
         } else if (playerValue < npcValue && currentState == 3) {
             Log.i("vac", "Game Result : Win");
             result.setText("WIN!");
@@ -266,6 +268,7 @@ public class HomeActivity extends AppCompatActivity {
             BigInteger totalEth = user.getUserEth().add(strToBi);
             user.setUserEth(totalEth);
             userEthAmount.setText("ETH: " + String.valueOf(totalEth));
+            createTransactionHistory("WITHDRAW", value);
 
         } else {
             Log.i("vac", "Game Result : Lose");
@@ -277,6 +280,7 @@ public class HomeActivity extends AppCompatActivity {
             BigInteger totalEth = user.getUserEth().subtract(strToBi);
             user.setUserEth(totalEth);
             userEthAmount.setText("ETH: " + String.valueOf(totalEth));
+            createTransactionHistory("DEPOSIT", value);
         }
     }
 
@@ -301,5 +305,42 @@ public class HomeActivity extends AppCompatActivity {
         betText.getText().clear();
         playButton.setVisibility(View.VISIBLE);
         countCardOpened = 0;
+    }
+
+    public void createTransactionHistory(String task, String value) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        Call<Transaction> call = retrofitAPI.createTransaction(new Transaction(task, value, "play card game.", Integer.parseInt(user.getId())));
+        call.enqueue(new Callback<Transaction>() {
+            @Override
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+//                Transaction responseFromAPI = response.body();
+                Log.i("vac", "Create Transaction: " + response.code());
+                if (response.code() == 200 || response.code() == 201) {
+                    Log.i("vac", "Create Transaction Success: " + response.code());
+                } else {
+                    Toast.makeText(HomeActivity.this, "Enable to create transaction.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Transaction> call, Throwable t) {
+                Log.i("vac", "Error found is : " + t.getMessage());
+                Toast.makeText(HomeActivity.this, "Enable to create transaction.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void profileButtonClk(View view) {
+        Intent intent = new Intent(this, TransactionActivity.class);
+        String jsonInString = gson.toJson(user);
+//        Log.i("vac", "json" + jsonInString);
+        intent.putExtra("user", jsonInString);
+        startActivity(intent);
     }
 }

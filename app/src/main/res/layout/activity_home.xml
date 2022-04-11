@@ -79,6 +79,7 @@
         android:layout_width="65dp"
         android:layout_height="75dp"
         android:background="@android:color/transparent"
+        android:onClick="profileButtonClk"
         android:src="@drawable/person"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

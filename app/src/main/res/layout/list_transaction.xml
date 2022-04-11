@@ -41,7 +41,8 @@
                     android:text="Christopher"
                     android:textColor="@color/black"
                     android:textSize="26sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:paddingTop="10dp" />
 
                 <TextView
                     android:id="@+id/textViewDetail"
@@ -58,9 +59,8 @@
             android:id="@+id/textViewCreated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="15dp"
             android:layout_alignParentRight="true"
-            android:text="8:35 pm"/>
+            android:text="8:35 pm" />
 
     </RelativeLayout>
 

@@ -22,6 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import th.ac.ku.cardgame.UserModel.Transaction;
 import th.ac.ku.cardgame.UserModel.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,11 +35,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void joinBtn(View view) throws InterruptedException {
-        Intent intent = new Intent(this, TransactionActivity.class);
-        startActivity(intent);
-
-
-        /*
         Intent intent = new Intent(this, HomeActivity.class);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -93,6 +89,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Try again", Toast.LENGTH_SHORT).show();
                 }
             });
-        }*/
+        }
     }
 }

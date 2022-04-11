@@ -14,6 +14,7 @@ import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.DefaultGasProvider;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -24,6 +25,8 @@ public class User {
     String id;
     @Expose
     String key;
+    @Expose
+    List<Transaction> transactions;
 
     BigInteger userEth;
 
@@ -33,6 +36,10 @@ public class User {
 
     public String getKey() {
         return key;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
     public BigInteger getUserEth() {
