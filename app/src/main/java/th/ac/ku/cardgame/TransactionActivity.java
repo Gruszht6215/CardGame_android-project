@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -62,7 +63,7 @@ public class TransactionActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Transaction>> call, Throwable t) {
-
+                Toast.makeText(TransactionActivity.this, "Enable to load transaction history.", Toast.LENGTH_SHORT).show();
             }
         });
     }
