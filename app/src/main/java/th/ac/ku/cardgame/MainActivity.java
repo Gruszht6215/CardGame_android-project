@@ -35,7 +35,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void joinBtn(View view) throws InterruptedException {
-        Intent intent = new Intent(this, HomeActivity.class);
+//        Intent intent = new Intent(this, ShopActivity.class);
+//        startActivity(intent);
+//        Intent intent = new Intent(this, TransactionActivity.class);
+//        startActivity(intent);
+
+       Intent intent = new Intent(this, HomeActivity.class);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:8000/")

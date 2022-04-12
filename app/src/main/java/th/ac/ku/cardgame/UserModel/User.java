@@ -19,14 +19,21 @@ import java.util.List;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import th.ac.ku.cardgame.CardGameSolidity;
+import th.ac.ku.cardgame.Shop.CardItem;
 
 public class User {
     @Expose
     String id;
     @Expose
     String key;
-    @Expose
+
     List<Transaction> transactions;
+
+    @Expose
+    int using_card_id;
+
+    @Expose
+    List<CardItem> cards;
 
     BigInteger userEth;
 
@@ -40,6 +47,14 @@ public class User {
 
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public int getUsing_card_id() {
+        return using_card_id;
+    }
+
+    public List<CardItem> getCards() {
+        return cards;
     }
 
     public BigInteger getUserEth() {

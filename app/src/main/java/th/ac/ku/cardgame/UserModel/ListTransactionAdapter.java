@@ -25,7 +25,7 @@ public class ListTransactionAdapter extends ArrayAdapter<Transaction> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        Transaction transaction =getItem(position);
+        Transaction transaction = getItem(position);
 
         if (convertView == null){
 

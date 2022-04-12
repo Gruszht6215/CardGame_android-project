@@ -297,8 +297,8 @@ public class HomeActivity extends AppCompatActivity {
 
         betStat.setVisibility(View.VISIBLE);
         progressStat.setVisibility(View.INVISIBLE);
-        playerImageButton.setImageResource(R.drawable.card_back);
-        npcImageButton.setImageResource(R.drawable.card_back);
+        playerImageButton.setImageResource(R.drawable.card_back_default);
+        npcImageButton.setImageResource(R.drawable.card_back_default);
         playerImageButton.setVisibility(View.INVISIBLE);
         npcImageButton.setVisibility(View.INVISIBLE);
         radioGroup.clearCheck();
@@ -338,6 +338,15 @@ public class HomeActivity extends AppCompatActivity {
 
     public void profileButtonClk(View view) {
         Intent intent = new Intent(this, TransactionActivity.class);
+        String jsonInString = gson.toJson(user);
+//        Log.i("vac", "json" + jsonInString);
+        intent.putExtra("user", jsonInString);
+        startActivity(intent);
+    }
+
+    public void shopBtnClk(View view) {
+        Log.i("vac", "Shop!!!");
+        Intent intent = new Intent(this, ShopActivity.class);
         String jsonInString = gson.toJson(user);
 //        Log.i("vac", "json" + jsonInString);
         intent.putExtra("user", jsonInString);

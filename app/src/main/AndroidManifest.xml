@@ -13,6 +13,9 @@
         android:theme="@style/Theme.CardGame"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ShopActivity"
+            android:exported="false" />
+        <activity
             android:name=".TransactionActivity"
             android:exported="false" />
         <activity
