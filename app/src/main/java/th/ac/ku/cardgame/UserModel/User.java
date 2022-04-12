@@ -26,15 +26,11 @@ public class User {
     String id;
     @Expose
     String key;
-
     List<Transaction> transactions;
-
     @Expose
     int using_card_id;
-
     @Expose
     List<CardItem> cards;
-
     BigInteger userEth;
 
     public String getId() {
@@ -61,8 +57,38 @@ public class User {
         return userEth;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public void setUsing_card_id(int using_card_id) {
+        this.using_card_id = using_card_id;
+    }
+
+    public void setCards(List<CardItem> cards) {
+        this.cards = cards;
+    }
+
     public void setUserEth(BigInteger userEth) {
         this.userEth = userEth;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", key='" + key + '\'' +
+                ", using_card_id=" + using_card_id +
+                ", userEth=" + userEth +
+                '}';
     }
 
     public void initialPlayerEth() {
