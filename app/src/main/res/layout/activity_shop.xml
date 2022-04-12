@@ -6,10 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".ShopActivity">
 
+    <ProgressBar
+        android:id="@+id/progressBarShop"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userEthShopTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ETH:"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/listviewShop"
-        tools:listitem="@layout/list_shop"/>
+        android:layout_width="392dp"
+        android:layout_height="751dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/list_shop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -27,11 +28,16 @@ import th.ac.ku.cardgame.UserModel.User;
 
 public class MainActivity extends AppCompatActivity {
     int status = 0;
+    private ProgressBar spinner;
+    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        spinner = findViewById(R.id.progressBarLogin);
+        spinner.setVisibility(View.GONE);
+
     }
 
     public void joinBtn(View view) throws InterruptedException {
@@ -39,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 //        startActivity(intent);
 //        Intent intent = new Intent(this, TransactionActivity.class);
 //        startActivity(intent);
+
+        spinner.setVisibility(View.VISIBLE);
 
        Intent intent = new Intent(this, HomeActivity.class);
 
@@ -76,9 +84,8 @@ public class MainActivity extends AppCompatActivity {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                Gson gson = new Gson();
                                 String jsonInString = gson.toJson(responseFromAPI);
-                                Log.i("vac", "json" + jsonInString);
+//                                Log.i("vac", "json" + jsonInString);
                                 intent.putExtra("user", jsonInString);
                             }).thenRun(() -> startActivity(intent));
 

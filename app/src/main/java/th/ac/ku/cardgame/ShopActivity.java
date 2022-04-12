@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -30,16 +32,30 @@ public class ShopActivity extends AppCompatActivity {
     Gson gson = new Gson();
     User user;
     BigInteger tempUserEth;
+    ProgressBar progressBar;
+    TextView userEthAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
+        progressBar = findViewById(R.id.progressBarShop);
+        progressBar.setVisibility(View.VISIBLE);
+        userEthAmount = findViewById(R.id.userEthShopTextView);
 
         Intent intent = getIntent();
         String userStr = intent.getStringExtra("user");
         user = gson.fromJson(userStr, User.class);
+
+//        user.initialPlayerEth();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         tempUserEth = user.getUserEth();
+        userEthAmount.setText("ETH: " + String.valueOf(user.getUserEth()));
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:8000/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -54,6 +70,7 @@ public class ShopActivity extends AppCompatActivity {
                 User responseFromAPI = response.body();
                 Log.i("vac", "Create Card Equipped: " + response.code());
                 user = responseFromAPI;
+                progressBar.setVisibility(View.GONE);
                 setShopItem();
             }
 
@@ -108,8 +125,17 @@ public class ShopActivity extends AppCompatActivity {
         });
     }
 
-//    public void buyBtnClk(View view) {
-//        Log.i("vac", "Buy!!!");
-//    }
+    public void setUserEth(String amountEth) {
+        userEthAmount.setText("ETH: " + amountEth);
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, HomeActivity.class);
+        String jsonInString = gson.toJson(user);
+        intent.putExtra("user", jsonInString);
+        finish();
+        startActivity(intent);
+    }
 }

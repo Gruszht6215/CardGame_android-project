@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +14,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,12 +49,14 @@ public class ListShopAdapter extends ArrayAdapter<CardItem> implements ListAdapt
     private ArrayList<CardItem> itemList = new ArrayList<CardItem>();
     private User user;
     private Context context;
+    private String currentUserEth;
 
     public ListShopAdapter(Context context, ArrayList<CardItem> cardsArrayList, User user) {
         super(context, R.layout.list_shop, cardsArrayList);
         this.itemList = cardsArrayList;
         this.user = user;
         this.context = context;
+        this.currentUserEth = String.valueOf(user.getUserEth());
     }
 
     @Override
@@ -69,7 +78,6 @@ public class ListShopAdapter extends ArrayAdapter<CardItem> implements ListAdapt
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
         CardItem card = getItem(position);
 
         if (convertView == null){
@@ -104,21 +112,23 @@ public class ListShopAdapter extends ArrayAdapter<CardItem> implements ListAdapt
         buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("vac", "Shop Button: " + getItem(position).toString());
-                Log.i("vac", "Shop Button: " + buyButton.getText().toString());
+//                Log.i("vac", "Shop Button: " + getItem(position).toString());
+//                Log.i("vac", "Shop Button: " + buyButton.getText().toString());
                 String cardStatus = buyButton.getText().toString();
                 if (cardStatus.matches("Equip")) {
                     EquipItem((int)getItemId(position));
                     ((Activity)context).finish();
                     context.startActivity( ((Activity)context).getIntent());
                 } else {
-                    if (user.getUserEth().intValue() < getItem(position).getPrice()) {
+                    if (Integer.parseInt(currentUserEth) < getItem(position).getPrice()) {
 //                        Log.i("vac", "cant afford: " + user.toString());
                         Toast.makeText(context, "Not enough eth.", Toast.LENGTH_SHORT).show();
                     } else {
-                        buyItem(String.valueOf(getItemId(position)));
+                        buyItem(String.valueOf(getItemId(position)), String.valueOf(getItem(position).getPrice()));
                         ((Activity)context).finish();
                         context.startActivity( ((Activity)context).getIntent());
+//                        TextView userEthAmount = findViewById(R.id.userEthShopTextView);
+
                     }
                 }
             }
@@ -140,8 +150,9 @@ public class ListShopAdapter extends ArrayAdapter<CardItem> implements ListAdapt
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-//                User responseFromAPI = response.body();
+                User responseFromAPI = response.body();
                 Log.i("vac", "Create Card Equipped: " + response.code());
+                user.setUsing_card_id(responseFromAPI.getUsing_card_id());
 //                user = responseFromAPI;
 //                Intent intent = new Intent(context, ShopActivity.class);
 //                Gson gson = new Gson();
@@ -156,7 +167,7 @@ public class ListShopAdapter extends ArrayAdapter<CardItem> implements ListAdapt
         });
     }
 
-    public void buyItem(String cardId) {
+    public void buyItem(String cardId, String price) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:8000/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -167,11 +178,31 @@ public class ListShopAdapter extends ArrayAdapter<CardItem> implements ListAdapt
         Shop shop = new Shop(user.getId(), cardId);
         Call<User> call = retrofitAPI.userBuyItem(shop);
         call.enqueue(new Callback<User>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User responseFromAPI = response.body();
                 Log.i("vac", "Card Buy Success: " + response.code());
+                responseFromAPI.decreasePlayerEth(price);
+                int totalEth = Integer.parseInt(currentUserEth) - Integer.parseInt(price);
+                currentUserEth = String.valueOf(totalEth);
+                Log.i("vac", "Current ETH: " + currentUserEth);
+//                TextView uEth = ((ShopActivity)context).findViewById(R.id.userEthShopTextView);
+//                uEth.setText(currentUserEth);
 
+                BigInteger result = new BigInteger(currentUserEth);
+                user.setUserEth(result);
+                Gson gson = new Gson();
+                Intent intent = new Intent(context, ShopActivity.class);
+                String jsonInString = gson.toJson(user);
+                intent.putExtra("user", jsonInString);
+//                ((ShopActivity)context).finish();
+                ((ShopActivity)context).startActivity(intent);
+
+                if (context instanceof ShopActivity) {
+                    Log.i("vac", "Work?");
+                    ((ShopActivity)context).setUserEth(currentUserEth);
+                }
             }
 
             @Override

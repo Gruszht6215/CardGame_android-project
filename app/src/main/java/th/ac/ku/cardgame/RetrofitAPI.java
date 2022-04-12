@@ -38,4 +38,7 @@ public interface RetrofitAPI {
 
     @POST("/api/user-buy-card/")
     Call<User> userBuyItem(@Body Shop shop);
+
+    @GET("/api/cards/{id}")
+    Call<CardItem> getCard(@Path("id")String id);
 }

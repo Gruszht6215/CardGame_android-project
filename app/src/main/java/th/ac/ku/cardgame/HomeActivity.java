@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +31,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import th.ac.ku.cardgame.DeckOfCard.Card;
 import th.ac.ku.cardgame.DeckOfCard.Deck;
+import th.ac.ku.cardgame.Shop.CardItem;
 import th.ac.ku.cardgame.UserModel.Transaction;
 import th.ac.ku.cardgame.UserModel.User;
 
@@ -37,23 +41,23 @@ public class HomeActivity extends AppCompatActivity {
     int countCardOpened = 0;
     Card npcCard;
     Card playerCard;
+    CardItem playerUsingCard;
     Gson gson = new Gson();
     User user;
+//    ProgressBar progressBar;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+//        Log.i("vac", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         //get User data from MainActivity
         Intent intent = getIntent();
         String userStr = intent.getStringExtra("user");
         user = gson.fromJson(userStr, User.class);
-        String responseString = "Id : " + user.getId()
-                + "\n" + "Key : " + user.getKey()
-                + "\n" + "ETH : " + user.getUserEth();
-        Log.i("vac", responseString);
+        Log.i("vac", "Home get user: " + user.toString());
 //        user.initialPlayerEth();
 
         try {
@@ -115,6 +119,8 @@ public class HomeActivity extends AppCompatActivity {
                     player_card.setVisibility(View.VISIBLE);
                     playButton.setVisibility(View.INVISIBLE);
                     betStat.setVisibility(View.INVISIBLE);
+
+                    setPlayerUsingCard();
                 }
             }
         }
@@ -351,5 +357,36 @@ public class HomeActivity extends AppCompatActivity {
 //        Log.i("vac", "json" + jsonInString);
         intent.putExtra("user", jsonInString);
         startActivity(intent);
+    }
+
+    public void setPlayerUsingCard() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        Call<CardItem> call = retrofitAPI.getCard(String.valueOf(user.getUsing_card_id()));
+        call.enqueue(new Callback<CardItem>() {
+            @Override
+            public void onResponse(Call<CardItem> call, Response<CardItem> response) {
+                CardItem responseFromAPI = response.body();
+//                playerUsingCard = responseFromAPI;
+                Log.i("vac", "get player using card: " + responseFromAPI.toString());
+                ImageButton playerUsingCard = findViewById(R.id.player_card);
+
+                Resources res = getResources();
+                String cardDrawableName = "card_back_" + responseFromAPI.getName();
+                int resID = res.getIdentifier(cardDrawableName , "drawable", getPackageName());
+                Drawable drawable = res.getDrawable(resID );
+                playerUsingCard.setImageDrawable(drawable);
+            }
+
+            @Override
+            public void onFailure(Call<CardItem> call, Throwable t) {
+                Log.i("vac", "Error found is : " + t.getMessage());
+            }
+        });
     }
 }
