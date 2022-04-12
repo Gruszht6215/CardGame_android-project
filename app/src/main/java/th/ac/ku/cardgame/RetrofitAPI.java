@@ -8,6 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import th.ac.ku.cardgame.DeckOfCard.Deck;
+import th.ac.ku.cardgame.Shop.CardItem;
 import th.ac.ku.cardgame.UserModel.Transaction;
 import th.ac.ku.cardgame.UserModel.User;
 
@@ -25,4 +26,7 @@ public interface RetrofitAPI {
 
     @POST("/api/transactions/")
     Call<Transaction> createTransaction(@Body Transaction transaction);
+
+    @GET("/api/cards/")
+    Call<List<CardItem>> getCardItem();
 }
