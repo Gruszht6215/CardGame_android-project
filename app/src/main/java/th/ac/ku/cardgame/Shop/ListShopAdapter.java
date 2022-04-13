@@ -195,18 +195,47 @@ public class ListShopAdapter extends ArrayAdapter<CardItem> implements ListAdapt
                 Gson gson = new Gson();
                 Intent intent = new Intent(context, ShopActivity.class);
                 String jsonInString = gson.toJson(user);
+                Log.i("vac", "Json" + jsonInString);
                 intent.putExtra("user", jsonInString);
 //                ((ShopActivity)context).finish();
-                ((ShopActivity)context).startActivity(intent);
-
                 if (context instanceof ShopActivity) {
-                    Log.i("vac", "Work?");
+//                    Log.i("vac", "Work?");
                     ((ShopActivity)context).setUserEth(currentUserEth);
                 }
+                ((ShopActivity)context).startActivity(intent);
+                createTransactionHistory("WITHDRAW", price);
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                Log.i("vac", "Error found is : " + t.getMessage());
+            }
+        });
+    }
+
+    public void createTransactionHistory(String task, String value) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        Call<Transaction> call = retrofitAPI.createTransaction(new Transaction(task, value, "buy a card.", Integer.parseInt(user.getId())));
+        call.enqueue(new Callback<Transaction>() {
+            @Override
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+//                Transaction responseFromAPI = response.body();
+                Log.i("vac", "Create Transaction: " + response.code());
+                if (response.code() == 200 || response.code() == 201) {
+                    Log.i("vac", "Create Transaction Success: " + response.code());
+                } else {
+                    Log.i("vac", "Enable to create transaction: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Transaction> call, Throwable t) {
                 Log.i("vac", "Error found is : " + t.getMessage());
             }
         });

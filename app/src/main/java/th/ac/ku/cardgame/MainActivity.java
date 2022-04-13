@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                     if (status == 200 || status == 201) {
                         try {
                             CompletableFuture.runAsync(() -> {
+//                                responseFromAPI.storePlayerEth("900");
                                 responseFromAPI.initialPlayerEth();
                                 try {
                                     Thread.sleep(3000);
